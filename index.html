@@ -47,6 +47,7 @@ body{
   font-family: var(--font-jp);
   line-height: 1.85;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 a{ color: inherit; text-decoration: none; }
@@ -331,6 +332,101 @@ ul{ list-style: none; margin: 0; padding: 0; }
 .game-result{ margin-top: 26px; font-size: 15px; min-height: 22px; }
 .game-score{ margin-top: 10px; font-family: var(--font-mono); font-size: 12px; color: rgba(255,255,255,0.45); }
 
+/* arcade tabs */
+.arcade-tabs{ display: flex; gap: 8px; margin-bottom: 32px; flex-wrap: wrap; justify-content: center; }
+.arcade-tab{
+  background: none;
+  border: 1px solid rgba(255,255,255,0.28);
+  color: rgba(255,255,255,0.7);
+  padding: 8px 18px;
+  font-size: 13px;
+  font-family: var(--font-jp);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+.arcade-tab:hover{ border-color: #fff; color: #fff; }
+.arcade-tab.is-active{ background: #fff; color: var(--ink); border-color: #fff; }
+.arcade-panel[hidden]{ display: none; }
+.arcade-panel{ display: flex; flex-direction: column; align-items: center; }
+
+/* reaction game */
+.reaction-box{
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  font-size: 14.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+.reaction-box:hover{ transform: scale(1.02); }
+.reaction-box.is-waiting{ background: rgba(255,70,47,0.28); }
+.reaction-box.is-go{ background: #34d399; color: #0c0d10; }
+
+/* click race game */
+.click-race-btn{
+  width: 170px; height: 170px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.1s ease, background 0.2s ease;
+}
+.click-race-btn:active{ transform: scale(0.94); background: rgba(255,70,47,0.32); }
+
+/* memory match */
+.memory-grid{ display: grid; grid-template-columns: repeat(4, 56px); gap: 10px; margin-bottom: 22px; }
+.memory-card{
+  width: 56px; height: 56px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.28);
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+.memory-card:hover{ transform: translateY(-2px); border-color: var(--red); }
+.memory-card.is-matched{ background: rgba(52,211,153,0.25); border-color: #34d399; cursor: default; }
+
+/* simon (color sequence) */
+.simon-grid{ display: grid; grid-template-columns: repeat(2, 68px); grid-template-rows: repeat(2, 68px); gap: 10px; }
+.simon-btn{
+  border-radius: 12px;
+  border: none;
+  background: var(--sc);
+  opacity: 0.35;
+  cursor: pointer;
+  transition: opacity 0.15s ease, transform 0.1s ease;
+}
+.simon-btn:hover{ opacity: 0.6; }
+.simon-btn.is-lit{ opacity: 1; transform: scale(1.06); }
+
+/* math quiz */
+.math-problem{
+  font-family: var(--font-mono);
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 24px;
+}
+
+/* confetti */
+.confetti-piece{
+  position: fixed;
+  top: -40px;
+  z-index: 700;
+  pointer-events: none;
+  animation: confettiFall linear forwards;
+}
+@keyframes confettiFall{
+  to{ transform: translateY(110vh) rotate(360deg); opacity: 0.2; }
+}
+
 /* -------------------- keyword easter egg -------------------- */
 
 body.uaor-flash{ animation: uaorFlash 0.6s ease; }
@@ -338,6 +434,170 @@ body.uaor-flash{ animation: uaorFlash 0.6s ease; }
   0%{ filter: invert(0); }
   35%{ filter: invert(1); }
   100%{ filter: invert(0); }
+}
+
+/* -------------------- hidden dark mode -------------------- */
+
+body.raid-mode{
+  --bg: #0c0d10;
+  --ink: #f5f6f7;
+  --ink-soft: #b7b8c0;
+  --ink-mute: #7d7e86;
+  --line: #24242a;
+  --hover-bg: #17181c;
+}
+
+/* -------------------- secret terminal (konami) -------------------- */
+
+.terminal-area{
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 600;
+  background: #05070a;
+  color: #3ddc70;
+  font-family: var(--font-mono);
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+}
+.terminal-area.is-visible{ display: flex; }
+.terminal-inner{ max-width: 600px; width: 100%; }
+.terminal-line{
+  margin: 0 0 12px;
+  opacity: 0;
+  transform: translateY(6px);
+  animation: termIn 0.4s ease forwards;
+  white-space: pre-wrap;
+  font-size: 14px;
+  line-height: 1.7;
+}
+@keyframes termIn{ to{ opacity: 1; transform: translateY(0); } }
+.terminal-cursor{
+  display: inline-block;
+  width: 8px; height: 15px;
+  background: #3ddc70;
+  margin-left: 4px;
+  animation: termBlink 1s steps(1) infinite;
+  vertical-align: middle;
+}
+@keyframes termBlink{ 50%{ opacity: 0; } }
+.terminal-close{
+  margin-top: 26px;
+  background: none;
+  border: 1px solid #3ddc70;
+  color: #3ddc70;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 8px 20px;
+  cursor: pointer;
+}
+.terminal-close:hover{ background: #3ddc70; color: #05070a; }
+
+/* -------------------- secret club (hash url) -------------------- */
+
+.club-area{
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 550;
+  background: var(--ink);
+  color: #fff;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+}
+.club-area.is-visible{ display: flex; }
+.member-card{
+  margin-top: 30px;
+  width: 280px;
+  background: #fff;
+  color: var(--ink);
+  border-radius: 12px;
+  padding: 26px 24px;
+  text-align: left;
+  box-shadow: 0 24px 50px rgba(0,0,0,0.45);
+}
+.member-card__label{ font-family: var(--font-en); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-mute); margin: 0 0 16px; }
+.member-card__id{ font-family: var(--font-mono); font-weight: 700; font-size: 18px; margin: 0 0 8px; }
+.member-card__role{ font-size: 13px; color: var(--red); font-weight: 700; margin: 0; }
+
+/* -------------------- midnight club (time-based) -------------------- */
+
+.midnight-link{
+  font-size: 13px;
+  opacity: 0.45;
+  transition: opacity 0.2s ease;
+}
+.midnight-link:hover{ opacity: 1; }
+
+.midnight-area{
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 550;
+  background: #12142b;
+  color: #dfe3ff;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+}
+.midnight-area.is-visible{ display: flex; }
+.midnight-area .secret-text{ color: rgba(223,227,255,0.7); }
+.midnight-area .secret-close{ border-color: rgba(223,227,255,0.3); color: #dfe3ff; }
+.midnight-area .secret-close:hover{ border-color: var(--red); color: var(--red); }
+
+/* -------------------- deep scroll (scroll to bottom) -------------------- */
+
+.deep-scroll{
+  max-height: 0;
+  overflow: hidden;
+  text-align: center;
+  background: var(--hover-bg);
+  transition: max-height 0.6s ease, padding 0.6s ease;
+}
+.deep-scroll.is-open{ max-height: 320px; }
+.deep-scroll__inner{ padding: 60px 24px; max-width: 480px; }
+
+/* -------------------- 404 (any unknown hash) -------------------- */
+
+.notfound-area{
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 550;
+  background: #1a1508;
+  color: #ffd9a0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+}
+.notfound-area.is-visible{ display: flex; }
+.notfound-area .secret-text{ color: rgba(255,217,160,0.7); }
+.notfound-area .secret-close{ border-color: rgba(255,217,160,0.3); color: #ffd9a0; }
+.notfound-area .secret-close:hover{ border-color: var(--red); color: var(--red); }
+
+/* -------------------- print easter egg -------------------- */
+
+@media print{
+  body *{ visibility: hidden; }
+  body::after{
+    content: "ここまで印刷してくれてありがとう。紙、大事に使ってね。";
+    visibility: visible;
+    position: fixed;
+    top: 45%;
+    left: 0; right: 0;
+    text-align: center;
+    font-family: sans-serif;
+    font-size: 16px;
+    color: #000;
+  }
 }
 
 /* -------------------- focus states -------------------- */
@@ -375,7 +635,7 @@ a:focus-visible, button:focus-visible{ outline: 2px solid var(--red); outline-of
 <header class="site-header" id="top">
   <div class="wrap header-inner">
     <a class="brand" href="#top">
-      <span class="brand-dot" aria-hidden="true"></span>
+      <span class="brand-dot" id="brandDot" aria-hidden="true"></span>
       <span class="brand-text">United Army of Raider</span>
     </a>
     <nav class="main-nav" id="mainNav">
@@ -395,7 +655,7 @@ a:focus-visible, button:focus-visible{ outline: 2px solid var(--red); outline-of
   <section class="hero">
     <div class="wrap">
       <p class="eyebrow reveal"><span class="eyebrow-dot"></span>Discord Community</p>
-      <h1 class="hero-title reveal">United Army<br>of Raider</h1>
+      <h1 class="hero-title reveal" id="heroTitle">United Army<br>of Raider</h1>
       <p class="hero-sub reveal">特別なテーマはない、ふつうの雑談サーバーです。<br>ゲームもbot開発も、話したいことを話したい時に。</p>
       <div class="hero-actions reveal">
         <a class="btn btn--big" href="https://discord.gg/NpSkyEnHMa" target="_blank" rel="noopener">サーバーに参加する</a>
@@ -485,9 +745,21 @@ a:focus-visible, button:focus-visible{ outline: 2px solid var(--red); outline-of
 <footer class="site-footer">
   <div class="wrap footer-inner">
     <p>&copy; 2026 United Army of Raider</p>
-    <button class="secret-spinner" id="secretSpinner" aria-hidden="true" tabindex="-1">✦</button>
+    <div>
+      <a href="#" id="midnightLink" class="midnight-link" hidden>🌙</a>
+      <button class="secret-spinner" id="secretSpinner" aria-hidden="true" tabindex="-1">✦</button>
+    </div>
   </div>
 </footer>
+
+<div id="bottomSentinel" style="height:1px;" aria-hidden="true"></div>
+<section id="deepScroll" class="deep-scroll">
+  <div class="wrap deep-scroll__inner">
+    <p class="secret-eyebrow">You scrolled all the way down</p>
+    <h2 class="secret-title" style="color:var(--ink)">よくぞここまで。</h2>
+    <p class="secret-text" style="color:var(--ink-soft)">スクロールバーの一番下でじっと待ってくれてありがとう。<br>本当に、それだけです。</p>
+  </div>
+</section>
 
 <!--
        ___________
@@ -513,7 +785,7 @@ a:focus-visible, button:focus-visible{ outline: 2px solid var(--red); outline-of
   <div id="secretPuzzle" class="secret-panel">
     <p class="secret-eyebrow">??? Secret Area ???</p>
     <h2 class="secret-title">ようこそ、裏サイトへ。</h2>
-    <p class="secret-text">くるくる回して辿り着いた物好きな人へ。<br>合言葉を解くと、ちょっとしたミニゲームで遊べます。</p>
+    <p class="secret-text">くるくる回して辿り着いた物好きな人へ。<br>合言葉を解くと、ミニアーケードで遊べます。</p>
     <form class="puzzle-form" id="puzzleForm">
       <input class="puzzle-input" id="puzzleInput" type="text" placeholder="合言葉を入力" autocomplete="off">
       <button class="puzzle-submit" type="submit">解く</button>
@@ -523,16 +795,126 @@ a:focus-visible, button:focus-visible{ outline: 2px solid var(--red); outline-of
 
   <div id="secretGame" class="secret-panel" hidden>
     <p class="secret-eyebrow">Unlocked</p>
-    <h2 class="game-title">🎲 じゃんけんゲーム</h2>
-    <p class="game-sub">運営に勝てたら、それはそれですごい。</p>
-    <div class="game-choices">
-      <button class="game-choice" data-choice="rock" title="グー">✊</button>
-      <button class="game-choice" data-choice="scissors" title="チョキ">✌️</button>
-      <button class="game-choice" data-choice="paper" title="パー">✋</button>
+    <h2 class="game-title">🎮 ミニアーケード</h2>
+    <p class="game-sub">3つの中から遊びたいものを選んでね。</p>
+
+    <div class="arcade-tabs">
+      <button class="arcade-tab is-active" data-game="janken">じゃんけん</button>
+      <button class="arcade-tab" data-game="reaction">反射神経</button>
+      <button class="arcade-tab" data-game="guess">数当て</button>
+      <button class="arcade-tab" data-game="click">連打</button>
+      <button class="arcade-tab" data-game="memory">神経衰弱</button>
+      <button class="arcade-tab" data-game="simon">色ならべ</button>
+      <button class="arcade-tab" data-game="math">暗算</button>
     </div>
-    <p class="game-result" id="gameResult">好きな手を選んでね</p>
-    <p class="game-score" id="gameScore">勝ち 0 ／ 負け 0 ／ あいこ 0</p>
+
+    <div class="arcade-panel" data-panel="janken">
+      <div class="game-choices">
+        <button class="game-choice" data-choice="rock" title="グー">✊</button>
+        <button class="game-choice" data-choice="scissors" title="チョキ">✌️</button>
+        <button class="game-choice" data-choice="paper" title="パー">✋</button>
+      </div>
+      <p class="game-result" id="gameResult">好きな手を選んでね</p>
+      <p class="game-score" id="gameScore">勝ち 0 ／ 負け 0 ／ あいこ 0</p>
+    </div>
+
+    <div class="arcade-panel" data-panel="reaction" hidden>
+      <button class="reaction-box" id="reactionBox">クリックしてスタート</button>
+      <p class="game-result" id="reactionResult">緑になったら即クリック</p>
+      <p class="game-score" id="reactionBest">ベスト記録: ―</p>
+    </div>
+
+    <div class="arcade-panel" data-panel="guess" hidden>
+      <p class="game-sub">1〜50の数字を当ててね</p>
+      <form class="puzzle-form" id="guessForm">
+        <input class="puzzle-input" id="guessInput" type="number" min="1" max="50" placeholder="数字を入力">
+        <button class="puzzle-submit" type="submit">予想する</button>
+      </form>
+      <p class="game-result" id="guessResult">何回で当てられるかな?</p>
+      <p class="game-score" id="guessCount">挑戦回数: 0</p>
+    </div>
+
+    <div class="arcade-panel" data-panel="click" hidden>
+      <button class="click-race-btn" id="clickRaceBtn">スタート</button>
+      <p class="game-result" id="clickRaceResult">5秒間で何回押せるか</p>
+      <p class="game-score" id="clickRaceBest">ベスト: ―</p>
+    </div>
+
+    <div class="arcade-panel" data-panel="memory" hidden>
+      <p class="game-sub">カテゴリの絵文字で神経衰弱。全6ペア。</p>
+      <div class="memory-grid" id="memoryGrid"></div>
+      <p class="game-result" id="memoryResult">2枚めくって揃えよう</p>
+      <p class="game-score" id="memoryMoves">手数: 0</p>
+    </div>
+
+    <div class="arcade-panel" data-panel="simon" hidden>
+      <div class="simon-grid">
+        <button class="simon-btn" data-color="0" style="--sc:#ff6b6b"></button>
+        <button class="simon-btn" data-color="1" style="--sc:#4dabf7"></button>
+        <button class="simon-btn" data-color="2" style="--sc:#69db7c"></button>
+        <button class="simon-btn" data-color="3" style="--sc:#ffd43b"></button>
+      </div>
+      <button class="btn btn--small" id="simonStart" style="margin-top:22px;">スタート</button>
+      <p class="game-result" id="simonResult">スタートを押してね</p>
+      <p class="game-score" id="simonScore">記録: 0</p>
+    </div>
+
+    <div class="arcade-panel" data-panel="math" hidden>
+      <p class="math-problem" id="mathProblem">- + - = ?</p>
+      <form class="puzzle-form" id="mathForm">
+        <input class="puzzle-input" id="mathInput" type="number" placeholder="答え">
+        <button class="puzzle-submit" type="submit">答える</button>
+      </form>
+      <p class="game-result" id="mathResult">何問連続で正解できるか</p>
+      <p class="game-score" id="mathScore">正解数: 0</p>
+    </div>
   </div>
+</section>
+
+<section id="terminalArea" class="terminal-area">
+  <div class="terminal-inner">
+    <p class="terminal-line" style="animation-delay:.1s">&gt; SYSTEM ACCESS GRANTED</p>
+    <p class="terminal-line" style="animation-delay:.4s">&gt; USER: RAIDER</p>
+    <p class="terminal-line" style="animation-delay:.7s">&gt; STATUS: 隠しコマンドを確認しました</p>
+    <p class="terminal-line" style="animation-delay:1.0s">&gt; ここは本当に何もない、ただのおまけです。</p>
+    <p class="terminal-line" style="animation-delay:1.3s">&gt; コナミコマンドを知っている人へ、敬意を込めて。<span class="terminal-cursor"></span></p>
+    <button class="terminal-close" id="terminalClose">EXIT</button>
+  </div>
+</section>
+
+<!--
+  もう一つの入り口:
+  このURLの末尾に #club を付けてアクセスしてみて。
+-->
+<section id="clubArea" class="club-area">
+  <button class="secret-close" id="clubClose">× 戻る</button>
+  <p class="secret-eyebrow">Member Access</p>
+  <h2 class="secret-title">会員証、発行しました。</h2>
+  <p class="secret-text">URLの隠し入口を見つけたあなたは、正式に「隠しURL探検隊」の一員です。<br>特典は特にありません。</p>
+  <div class="member-card">
+    <p class="member-card__label">United Army of Raider</p>
+    <p class="member-card__id" id="clubMemberId">MEMBER NO. ----</p>
+    <p class="member-card__role">隠しURL探検隊</p>
+  </div>
+</section>
+
+<section id="midnightArea" class="midnight-area">
+  <button class="secret-close" id="midnightClose">× 戻る</button>
+  <p class="secret-eyebrow">🌙 0:00 - 4:00 限定</p>
+  <h2 class="secret-title">深夜勢のたまり場</h2>
+  <p class="secret-text">こんな時間にこのサイトを開いているあなたへ。<br>お疲れさまです。無理せず、ほどほどに。</p>
+</section>
+
+<!--
+  ここにも入口がある:
+  URLの末尾に、適当な #なにか を付けてみて。
+  何を打っても、何かは見つかるようにしてある。
+-->
+<section id="notFoundArea" class="notfound-area">
+  <button class="secret-close" id="notFoundClose">× 戻る</button>
+  <p class="secret-eyebrow">404</p>
+  <h2 class="secret-title">ここには何もない…はずだった。</h2>
+  <p class="secret-text">適当なURLを打ち込んでみる、その好奇心に敬意を。<br>でも本当に、何もありません。ごめんね。</p>
 </section>
 
 <script>
@@ -648,6 +1030,433 @@ gameChoices.forEach((btn) => {
     gameScore.textContent = `勝ち ${score.win} ／ 負け ${score.lose} ／ あいこ ${score.draw}`;
   });
 });
+
+const arcadeTabs = document.querySelectorAll('.arcade-tab');
+const arcadePanels = document.querySelectorAll('.arcade-panel');
+
+arcadeTabs.forEach((tab) => {
+  tab.addEventListener('click', () => {
+    arcadeTabs.forEach((t) => t.classList.remove('is-active'));
+    tab.classList.add('is-active');
+    arcadePanels.forEach((panel) => {
+      panel.hidden = panel.dataset.panel !== tab.dataset.game;
+    });
+  });
+});
+
+const reactionBox = document.getElementById('reactionBox');
+const reactionResult = document.getElementById('reactionResult');
+const reactionBest = document.getElementById('reactionBest');
+let reactionState = 'idle';
+let reactionTimer = null;
+let reactionStart = 0;
+let bestTime = null;
+
+if (reactionBox) {
+  reactionBox.addEventListener('click', () => {
+    if (reactionState === 'idle') {
+      reactionState = 'waiting';
+      reactionBox.classList.add('is-waiting');
+      reactionBox.textContent = '緑になるまで待って…';
+      reactionResult.textContent = '';
+      const delay = 1000 + Math.random() * 2000;
+      reactionTimer = setTimeout(() => {
+        reactionState = 'go';
+        reactionBox.classList.remove('is-waiting');
+        reactionBox.classList.add('is-go');
+        reactionBox.textContent = '今だ!クリック!';
+        reactionStart = performance.now();
+      }, delay);
+    } else if (reactionState === 'waiting') {
+      clearTimeout(reactionTimer);
+      reactionState = 'idle';
+      reactionBox.classList.remove('is-waiting');
+      reactionBox.textContent = 'クリックしてスタート';
+      reactionResult.textContent = '早すぎ!もう一度どうぞ';
+    } else if (reactionState === 'go') {
+      const time = Math.round(performance.now() - reactionStart);
+      reactionState = 'idle';
+      reactionBox.classList.remove('is-go');
+      reactionBox.textContent = 'クリックしてスタート';
+      reactionResult.textContent = `反応速度: ${time}ms`;
+      if (bestTime === null || time < bestTime) {
+        bestTime = time;
+        reactionBest.textContent = `ベスト記録: ${bestTime}ms`;
+      }
+    }
+  });
+}
+
+const guessForm = document.getElementById('guessForm');
+const guessInput = document.getElementById('guessInput');
+const guessResult = document.getElementById('guessResult');
+const guessCount = document.getElementById('guessCount');
+let secretNumber = Math.floor(Math.random() * 50) + 1;
+let guessTries = 0;
+
+if (guessForm) {
+  guessForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const value = Number(guessInput.value);
+    if (!value) return;
+    guessTries += 1;
+    if (value === secretNumber) {
+      guessResult.textContent = `正解!🎉 ${guessTries}回で当てたね`;
+      secretNumber = Math.floor(Math.random() * 50) + 1;
+      guessTries = 0;
+    } else if (value < secretNumber) {
+      guessResult.textContent = 'もっと大きいよ';
+    } else {
+      guessResult.textContent = 'もっと小さいよ';
+    }
+    guessCount.textContent = `挑戦回数: ${guessTries}`;
+    guessInput.value = '';
+    guessInput.focus();
+  });
+}
+
+const clickRaceBtn = document.getElementById('clickRaceBtn');
+const clickRaceResult = document.getElementById('clickRaceResult');
+const clickRaceBest = document.getElementById('clickRaceBest');
+let raceActive = false;
+let raceCount = 0;
+let raceBest = null;
+let raceTimer = null;
+
+if (clickRaceBtn) {
+  clickRaceBtn.addEventListener('click', () => {
+    if (!raceActive) {
+      raceActive = true;
+      raceCount = 1;
+      clickRaceBtn.textContent = '連打!';
+      const startTime = performance.now();
+      raceTimer = setInterval(() => {
+        const elapsed = performance.now() - startTime;
+        const remaining = Math.max(0, 5000 - elapsed);
+        clickRaceResult.textContent = `残り ${(remaining / 1000).toFixed(1)}秒 / ${raceCount}回`;
+        if (remaining <= 0) {
+          clearInterval(raceTimer);
+          raceActive = false;
+          clickRaceBtn.textContent = 'スタート';
+          const cps = (raceCount / 5).toFixed(1);
+          clickRaceResult.textContent = `${raceCount}回 (${cps}回/秒)`;
+          if (raceBest === null || raceCount > raceBest) {
+            raceBest = raceCount;
+            clickRaceBest.textContent = `ベスト: ${raceBest}回`;
+          }
+        }
+      }, 100);
+    } else {
+      raceCount += 1;
+    }
+  });
+}
+
+const memoryGrid = document.getElementById('memoryGrid');
+const memoryResult = document.getElementById('memoryResult');
+const memoryMoves = document.getElementById('memoryMoves');
+const MEMORY_EMOJIS = ['💬', '🧑‍🤝‍🧑', '🤖', '👋', '🎲', '🎮'];
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+let memoryCards = shuffle([...MEMORY_EMOJIS, ...MEMORY_EMOJIS]);
+let memoryFlipped = [];
+let memoryMatched = [];
+let memoryMoveCount = 0;
+
+function renderMemory() {
+  if (!memoryGrid) return;
+  memoryGrid.innerHTML = '';
+  memoryCards.forEach((emoji, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'memory-card';
+    const isOpen = memoryFlipped.includes(i) || memoryMatched.includes(i);
+    btn.textContent = isOpen ? emoji : '?';
+    if (memoryMatched.includes(i)) btn.classList.add('is-matched');
+    btn.addEventListener('click', () => handleMemoryClick(i));
+    memoryGrid.appendChild(btn);
+  });
+}
+
+function handleMemoryClick(i) {
+  if (memoryFlipped.length >= 2 || memoryFlipped.includes(i) || memoryMatched.includes(i)) return;
+  memoryFlipped.push(i);
+  renderMemory();
+  if (memoryFlipped.length === 2) {
+    memoryMoveCount += 1;
+    memoryMoves.textContent = `手数: ${memoryMoveCount}`;
+    const [a, b] = memoryFlipped;
+    if (memoryCards[a] === memoryCards[b]) {
+      memoryMatched.push(a, b);
+      memoryFlipped = [];
+      renderMemory();
+      if (memoryMatched.length === memoryCards.length) {
+        memoryResult.textContent = `クリア!🎉 ${memoryMoveCount}手でそろえたね`;
+      }
+    } else {
+      setTimeout(() => {
+        memoryFlipped = [];
+        renderMemory();
+      }, 700);
+    }
+  }
+}
+renderMemory();
+
+const simonBtns = document.querySelectorAll('.simon-btn');
+const simonStart = document.getElementById('simonStart');
+const simonResult = document.getElementById('simonResult');
+const simonScore = document.getElementById('simonScore');
+let simonSeq = [];
+let simonUserPos = 0;
+let simonPlaying = false;
+let simonBest = 0;
+
+function simonFlash(idx, duration) {
+  return new Promise((resolve) => {
+    const btn = simonBtns[idx];
+    btn.classList.add('is-lit');
+    setTimeout(() => {
+      btn.classList.remove('is-lit');
+      resolve();
+    }, duration);
+  });
+}
+
+async function playSimonSequence() {
+  simonPlaying = false;
+  for (const idx of simonSeq) {
+    await simonFlash(idx, 400);
+    await new Promise((r) => setTimeout(r, 200));
+  }
+  simonPlaying = true;
+  simonUserPos = 0;
+}
+
+function nextSimonRound() {
+  simonSeq.push(Math.floor(Math.random() * 4));
+  simonResult.textContent = `ラウンド ${simonSeq.length}`;
+  playSimonSequence();
+}
+
+if (simonStart) {
+  simonStart.addEventListener('click', () => {
+    simonSeq = [];
+    simonUserPos = 0;
+    nextSimonRound();
+  });
+}
+
+simonBtns.forEach((btn, idx) => {
+  btn.addEventListener('click', () => {
+    if (!simonPlaying) return;
+    simonFlash(idx, 200);
+    if (idx === simonSeq[simonUserPos]) {
+      simonUserPos += 1;
+      if (simonUserPos === simonSeq.length) {
+        simonPlaying = false;
+        setTimeout(nextSimonRound, 600);
+      }
+    } else {
+      simonPlaying = false;
+      const result = simonSeq.length - 1;
+      if (result > simonBest) {
+        simonBest = result;
+        simonScore.textContent = `記録: ${simonBest}`;
+      }
+      simonResult.textContent = `残念…記録は ${result} でした`;
+    }
+  });
+});
+
+const mathProblem = document.getElementById('mathProblem');
+const mathForm = document.getElementById('mathForm');
+const mathInput = document.getElementById('mathInput');
+const mathResult = document.getElementById('mathResult');
+const mathScore = document.getElementById('mathScore');
+let mathScoreCount = 0;
+
+function newMathProblem() {
+  const a = Math.floor(Math.random() * 20) + 1;
+  const b = Math.floor(Math.random() * 20) + 1;
+  const ops = ['+', '-', '×'];
+  const op = ops[Math.floor(Math.random() * ops.length)];
+  let answer;
+  if (op === '+') answer = a + b;
+  else if (op === '-') answer = a - b;
+  else answer = a * b;
+  mathProblem.textContent = `${a} ${op} ${b} = ?`;
+  mathProblem.dataset.answer = answer;
+}
+
+if (mathForm) {
+  mathForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const val = Number(mathInput.value);
+    if (val === Number(mathProblem.dataset.answer)) {
+      mathScoreCount += 1;
+      mathScore.textContent = `正解数: ${mathScoreCount}`;
+      mathResult.textContent = '正解!🎉';
+    } else {
+      mathResult.textContent = `残念、正解は ${mathProblem.dataset.answer}`;
+    }
+    newMathProblem();
+    mathInput.value = '';
+    mathInput.focus();
+  });
+  newMathProblem();
+}
+
+const heroTitle = document.getElementById('heroTitle');
+if (heroTitle) {
+  let titleClicks = 0;
+  heroTitle.addEventListener('click', () => {
+    titleClicks += 1;
+    if (titleClicks >= 3) {
+      const emojis = ['🎉', '✨', '🎮', '🎲', '🤖', '💬'];
+      for (let i = 0; i < 24; i += 1) {
+        const span = document.createElement('span');
+        span.className = 'confetti-piece';
+        span.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        span.style.left = `${Math.random() * 100}vw`;
+        span.style.animationDuration = `${2 + Math.random() * 1.5}s`;
+        span.style.fontSize = `${16 + Math.random() * 14}px`;
+        document.body.appendChild(span);
+        setTimeout(() => span.remove(), 3500);
+      }
+      titleClicks = 0;
+    }
+  });
+}
+
+const clubArea = document.getElementById('clubArea');
+const clubClose = document.getElementById('clubClose');
+const clubMemberId = document.getElementById('clubMemberId');
+const notFoundArea = document.getElementById('notFoundArea');
+const notFoundClose = document.getElementById('notFoundClose');
+const KNOWN_HASHES = ['', '#top', '#categories', '#rules', '#club'];
+
+function checkHashSecrets() {
+  const hash = window.location.hash.toLowerCase();
+  if (hash === '#club' && clubArea) {
+    const memberId = Math.floor(Math.random() * 9000) + 1000;
+    if (clubMemberId) clubMemberId.textContent = `MEMBER NO. ${memberId}`;
+    clubArea.classList.add('is-visible');
+    document.body.style.overflow = 'hidden';
+    return;
+  }
+  if (hash && !KNOWN_HASHES.includes(hash) && notFoundArea) {
+    notFoundArea.classList.add('is-visible');
+    document.body.style.overflow = 'hidden';
+  }
+}
+window.addEventListener('hashchange', checkHashSecrets);
+checkHashSecrets();
+
+if (clubClose && clubArea) {
+  clubClose.addEventListener('click', () => {
+    clubArea.classList.remove('is-visible');
+    document.body.style.overflow = '';
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+  });
+}
+
+if (notFoundClose && notFoundArea) {
+  notFoundClose.addEventListener('click', () => {
+    notFoundArea.classList.remove('is-visible');
+    document.body.style.overflow = '';
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+  });
+}
+
+const bottomSentinel = document.getElementById('bottomSentinel');
+const deepScroll = document.getElementById('deepScroll');
+let dwellTimer = null;
+
+if (bottomSentinel && deepScroll && 'IntersectionObserver' in window) {
+  const dwellObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        dwellTimer = setTimeout(() => {
+          deepScroll.classList.add('is-open');
+        }, 2500);
+      } else {
+        clearTimeout(dwellTimer);
+      }
+    });
+  }, { threshold: 1.0 });
+  dwellObserver.observe(bottomSentinel);
+}
+
+const midnightLink = document.getElementById('midnightLink');
+const midnightArea = document.getElementById('midnightArea');
+const midnightClose = document.getElementById('midnightClose');
+const currentHour = new Date().getHours();
+
+if (midnightLink && currentHour >= 0 && currentHour < 4) {
+  midnightLink.hidden = false;
+}
+
+if (midnightLink && midnightArea) {
+  midnightLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    midnightArea.classList.add('is-visible');
+    document.body.style.overflow = 'hidden';
+  });
+}
+
+if (midnightClose && midnightArea) {
+  midnightClose.addEventListener('click', () => {
+    midnightArea.classList.remove('is-visible');
+    document.body.style.overflow = '';
+  });
+}
+
+const brandDot = document.getElementById('brandDot');
+if (brandDot) {
+  let raidClicks = 0;
+  brandDot.addEventListener('click', () => {
+    raidClicks += 1;
+    if (raidClicks >= 7) {
+      document.body.classList.toggle('raid-mode');
+      raidClicks = 0;
+    }
+  });
+}
+
+const terminalArea = document.getElementById('terminalArea');
+const terminalClose = document.getElementById('terminalClose');
+const KONAMI = ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a'];
+let konamiPos = 0;
+
+window.addEventListener('keydown', (e) => {
+  const tag = (e.target && e.target.tagName) || '';
+  if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+  const key = e.key.toLowerCase();
+  if (key === KONAMI[konamiPos]) {
+    konamiPos += 1;
+    if (konamiPos === KONAMI.length) {
+      terminalArea.classList.add('is-visible');
+      document.body.style.overflow = 'hidden';
+      konamiPos = 0;
+    }
+  } else {
+    konamiPos = key === KONAMI[0] ? 1 : 0;
+  }
+});
+
+if (terminalClose) {
+  terminalClose.addEventListener('click', () => {
+    terminalArea.classList.remove('is-visible');
+    document.body.style.overflow = '';
+  });
+}
 
 (() => {
   let buffer = '';
