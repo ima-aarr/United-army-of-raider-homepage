@@ -583,6 +583,107 @@ body.raid-mode{
 .notfound-area .secret-close{ border-color: rgba(255,217,160,0.3); color: #ffd9a0; }
 .notfound-area .secret-close:hover{ border-color: var(--red); color: var(--red); }
 
+/* -------------------- idle screensaver -------------------- */
+
+.idle-area{
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 650;
+  background: #000;
+  cursor: pointer;
+}
+.idle-area.is-visible{ display: block; }
+.idle-text{
+  position: absolute;
+  top: 0; left: 0;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 16px;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+/* -------------------- narrow window secret -------------------- */
+
+.narrow-area{
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 640;
+  background: #0c0d10;
+  color: #fff;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 12px;
+  font-size: 11px;
+  line-height: 1.6;
+}
+@media (max-width: 200px){
+  .narrow-area{ display: flex; }
+}
+
+/* -------------------- friday club (day-of-week) -------------------- */
+
+.friday-area{
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 550;
+  background: #2b1d0a;
+  color: #ffd76a;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+}
+.friday-area.is-visible{ display: flex; }
+.friday-area .secret-text{ color: rgba(255,215,106,0.75); }
+.friday-area .secret-close{ border-color: rgba(255,215,106,0.35); color: #ffd76a; }
+.friday-area .secret-close:hover{ border-color: var(--red); color: var(--red); }
+
+/* -------------------- press and hold -------------------- */
+
+.press-area{
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 550;
+  background: #140a2b;
+  color: #c9b6ff;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+}
+.press-area.is-visible{ display: flex; }
+.press-area .secret-text{ color: rgba(201,182,255,0.75); }
+.press-area .secret-close{ border-color: rgba(201,182,255,0.35); color: #c9b6ff; }
+.press-area .secret-close:hover{ border-color: var(--red); color: var(--red); }
+
+/* -------------------- category master -------------------- */
+
+.master-area{
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 550;
+  background: #07211b;
+  color: #8ff5d0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+}
+.master-area.is-visible{ display: flex; }
+.master-area .secret-text{ color: rgba(143,245,208,0.75); }
+.master-area .secret-close{ border-color: rgba(143,245,208,0.35); color: #8ff5d0; }
+.master-area .secret-close:hover{ border-color: var(--red); color: var(--red); }
+
 /* -------------------- print easter egg -------------------- */
 
 @media print{
@@ -744,8 +845,9 @@ a:focus-visible, button:focus-visible{ outline: 2px solid var(--red); outline-of
 
 <footer class="site-footer">
   <div class="wrap footer-inner">
-    <p>&copy; 2026 United Army of Raider</p>
+    <p id="pressHold">&copy; 2026 United Army of Raider</p>
     <div>
+      <a href="#" id="fridayLink" class="midnight-link" hidden>🎉</a>
       <a href="#" id="midnightLink" class="midnight-link" hidden>🌙</a>
       <button class="secret-spinner" id="secretSpinner" aria-hidden="true" tabindex="-1">✦</button>
     </div>
@@ -915,6 +1017,42 @@ a:focus-visible, button:focus-visible{ outline: 2px solid var(--red); outline-of
   <p class="secret-eyebrow">404</p>
   <h2 class="secret-title">ここには何もない…はずだった。</h2>
   <p class="secret-text">適当なURLを打ち込んでみる、その好奇心に敬意を。<br>でも本当に、何もありません。ごめんね。</p>
+</section>
+
+<!--
+  誰も見ていない画面にも、何かは起きている。
+-->
+<section id="idleArea" class="idle-area">
+  <p class="idle-text" id="idleText">まだ見てる…?</p>
+</section>
+
+<section id="narrowArea" class="narrow-area">
+  <p>🔍<br>こんなに細くしてくれてありがとう。</p>
+</section>
+
+<section id="fridayArea" class="friday-area">
+  <button class="secret-close" id="fridayClose">× 戻る</button>
+  <p class="secret-eyebrow">🎉 金曜日限定</p>
+  <h2 class="secret-title">花金クラブへようこそ</h2>
+  <p class="secret-text">今週もお疲れさまでした。<br>今夜はサーバーで雑談して、良い週末を。</p>
+</section>
+
+<!--
+  急いては事を仕損じる。
+  何かをじっと押し続けてみて。
+-->
+<section id="pressArea" class="press-area">
+  <button class="secret-close" id="pressClose">× 戻る</button>
+  <p class="secret-eyebrow">Patience</p>
+  <h2 class="secret-title">3秒、押し続けてくれてありがとう。</h2>
+  <p class="secret-text">気の短い人には見せられないやつです。</p>
+</section>
+
+<section id="masterArea" class="master-area">
+  <button class="secret-close" id="masterClose">× 戻る</button>
+  <p class="secret-eyebrow">Category Master</p>
+  <h2 class="secret-title">全カテゴリ制覇、お疲れさま。</h2>
+  <p class="secret-text">6つ全部にカーソルを合わせてくれた、その丁寧さに。</p>
 </section>
 
 <script>
@@ -1418,6 +1556,79 @@ if (midnightClose && midnightArea) {
   });
 }
 
+const fridayLink = document.getElementById('fridayLink');
+const fridayArea = document.getElementById('fridayArea');
+const fridayClose = document.getElementById('fridayClose');
+
+if (fridayLink && new Date().getDay() === 5) {
+  fridayLink.hidden = false;
+}
+if (fridayLink && fridayArea) {
+  fridayLink.addEventListener('click', (e) => {
+    e.preventDefault();
+    fridayArea.classList.add('is-visible');
+    document.body.style.overflow = 'hidden';
+  });
+}
+if (fridayClose && fridayArea) {
+  fridayClose.addEventListener('click', () => {
+    fridayArea.classList.remove('is-visible');
+    document.body.style.overflow = '';
+  });
+}
+
+const pressHold = document.getElementById('pressHold');
+const pressArea = document.getElementById('pressArea');
+const pressClose = document.getElementById('pressClose');
+let pressTimer = null;
+
+if (pressHold && pressArea) {
+  const startPress = () => {
+    pressTimer = setTimeout(() => {
+      pressArea.classList.add('is-visible');
+      document.body.style.overflow = 'hidden';
+    }, 3000);
+  };
+  const cancelPress = () => clearTimeout(pressTimer);
+
+  pressHold.addEventListener('mousedown', startPress);
+  pressHold.addEventListener('touchstart', startPress, { passive: true });
+  ['mouseup', 'mouseleave', 'touchend', 'touchcancel'].forEach((evt) => {
+    pressHold.addEventListener(evt, cancelPress);
+  });
+}
+if (pressClose && pressArea) {
+  pressClose.addEventListener('click', () => {
+    pressArea.classList.remove('is-visible');
+    document.body.style.overflow = '';
+  });
+}
+
+const catRows = document.querySelectorAll('.cat-row');
+const masterArea = document.getElementById('masterArea');
+const masterClose = document.getElementById('masterClose');
+const hoveredCats = new Set();
+let masterShown = false;
+
+if (catRows.length && masterArea) {
+  catRows.forEach((row, i) => {
+    row.addEventListener('mouseenter', () => {
+      hoveredCats.add(i);
+      if (hoveredCats.size === catRows.length && !masterShown) {
+        masterShown = true;
+        masterArea.classList.add('is-visible');
+        document.body.style.overflow = 'hidden';
+      }
+    });
+  });
+}
+if (masterClose && masterArea) {
+  masterClose.addEventListener('click', () => {
+    masterArea.classList.remove('is-visible');
+    document.body.style.overflow = '';
+  });
+}
+
 const brandDot = document.getElementById('brandDot');
 if (brandDot) {
   let raidClicks = 0;
@@ -1472,6 +1683,51 @@ if (terminalClose) {
     }
   });
 })();
+
+const idleArea = document.getElementById('idleArea');
+const idleText = document.getElementById('idleText');
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+if (idleArea && idleText && !prefersReducedMotion) {
+  const IDLE_MS = 45000;
+  let idleTimer = null;
+  let idleAnimId = null;
+  const idlePos = { x: 40, y: 40, vx: 2.2, vy: 1.6 };
+
+  function stepIdle() {
+    const maxX = window.innerWidth - idleText.offsetWidth;
+    const maxY = window.innerHeight - idleText.offsetHeight;
+    idlePos.x += idlePos.vx;
+    idlePos.y += idlePos.vy;
+    if (idlePos.x <= 0 || idlePos.x >= maxX) idlePos.vx *= -1;
+    if (idlePos.y <= 0 || idlePos.y >= maxY) idlePos.vy *= -1;
+    idlePos.x = Math.max(0, Math.min(maxX, idlePos.x));
+    idlePos.y = Math.max(0, Math.min(maxY, idlePos.y));
+    idleText.style.transform = `translate(${idlePos.x}px, ${idlePos.y}px)`;
+    idleAnimId = requestAnimationFrame(stepIdle);
+  }
+
+  function showIdle() {
+    idleArea.classList.add('is-visible');
+    stepIdle();
+  }
+
+  function hideIdle() {
+    idleArea.classList.remove('is-visible');
+    if (idleAnimId) cancelAnimationFrame(idleAnimId);
+  }
+
+  function resetIdleTimer() {
+    clearTimeout(idleTimer);
+    if (idleArea.classList.contains('is-visible')) hideIdle();
+    idleTimer = setTimeout(showIdle, IDLE_MS);
+  }
+
+  ['mousemove', 'keydown', 'scroll', 'click', 'touchstart'].forEach((evt) => {
+    window.addEventListener(evt, resetIdleTimer, { passive: true });
+  });
+  resetIdleTimer();
+}
 
 console.log('%c🤖 開発者コンソールへようこそ', 'font-size:16px;font-weight:bold;color:#ff3b2f;');
 console.log('bot開発チャンネルで待ってるよ。ちなみに合言葉のヒントはHTMLコメントの中。');
